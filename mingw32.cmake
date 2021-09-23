@@ -10,11 +10,11 @@ set(CMAKE_RC_FLAGS -DGCC_WINDRES)
 
 # here is the target environment located
 set(CMAKE_FIND_ROOT_PATH
-  /usr/i686-w64-mingw32/sys-root/mingw
-  /usr/i686-w64-mingw32/sysroot/mingw
+  /usr/i686-w64-mingw32/sys-root/mingw32
+  /usr/i686-w64-mingw32/sys-root/mingw32
   /usr/i686-w64-mingw32
   )
-SET (CMAKE_SYSROOT /usr/i686-w64-mingw32/sys-root)
+#SET (CMAKE_SYSROOT /usr/i686-w64-mingw32/sys-root)
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search
@@ -23,7 +23,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-set(ENV{PKG_CONFIG_PATH} /usr/i686-w64-mingw32/sys-root/mingw/lib/pkgconfig)
+set(ENV{PKG_CONFIG_PATH} /usr/i686-w64-mingw32/sys-root/mingw32/lib/pkgconfig)
 
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll" ".dll.a" ".lib" ".a")
