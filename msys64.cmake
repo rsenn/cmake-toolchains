@@ -3,8 +3,10 @@ set(CMAKE_SYSTEM_NAME Windows)
 
 # which compilers to use for C and C++
 include(CMakeForceCompiler)
-cmake_force_c_compiler(x86_64-pc-msys-gcc GNU)
-cmake_force_cxx_compiler(x86_64-pc-msys-g++ GNU)
+set(CMAKE_C_COMPILER x86_64-pc-msys-gcc)
+set(CMAKE_CXX_COMPILER x86_64-pc-msys-g++)
+#cmake_force_c_compiler(x86_64-pc-msys-gcc GNU)
+#cmake_force_cxx_compiler(x86_64-pc-msys-g++ GNU)
 set(CMAKE_RC_COMPILER x86_64-pc-msys-windres)
 set(CMAKE_RC_FLAGS -DGCC_WINDRES)
 
@@ -21,7 +23,8 @@ set(CMAKE_MODULE_PATH /usr/x86_64-pc-msys/sys-root/usr/lib/cmake)
 set(CMAKE_PREFIX_PATH /usr/x86_64-pc-msys/sys-root/usr)
 set(CMAKE_SYSTEM_PREFIX_PATH /usr/x86_64-pc-msys/sys-root/usr)
 
-SET (CMAKE_SYSROOT /usr/x86_64-pc-msys/sys-root)
+SET(CMAKE_SYSROOT /usr/x86_64-pc-msys/sys-root)
+SET(MSYS 1)
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search
