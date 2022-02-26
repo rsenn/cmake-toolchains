@@ -1,5 +1,7 @@
-set(CMAKE_C_COMPILER /usr/bin/diet-gcc)
-set(CMAKE_CXX_COMPILER /usr/bin/diet-gcc)
+set(CMAKE_C_COMPILER_LAUNCHER /usr/bin/diet)
+
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/bin/gcc)
 set(CMAKE_AR /usr/bin/ar)
 set(CMAKE_RANLIB /usr/bin/ranlib)
 set(CMAKE_ADDR2LINE /usr/bin/addr2line)
