@@ -34,9 +34,21 @@ else()
     set(ANDROID_APKSIGNER_KEY --ks $ENV{HOME}/.android/debug.keystore --ks-pass pass:android CACHE STRING "")
 endif()
 
-# Path to Android SDK. The build-tools/ subdirectory must exist.
+# Path to Android SDK. The tools/source.properties file is expected to exist to
+# avoid accidentally matching some arbitrary other directory.
 if(NOT ANDROID_SDK)
-    get_filename_component(ANDROID_SDK ${CMAKE_ANDROID_NDK}/../android-sdk/ REALPATH CACHE)
+    # Use the env var, if present
+    if(DEFINED ENV{ANDROID_SDK_ROOT})
+        set(ANDROID_SDK $ENV{ANDROID_SDK_ROOT})
+    # On Arch it's /opt/android-sdk and /opt/android-ndk
+    elseif(EXISTS ${CMAKE_ANDROID_NDK}/../android-sdk/tools/source.properties)
+        get_filename_component(ANDROID_SDK ${CMAKE_ANDROID_NDK}/../android-sdk/ REALPATH CACHE)
+    # On CircleCI it's /opt/android/sdk/ndk/<VERSION>
+    elseif(EXISTS ${CMAKE_ANDROID_NDK}/../../tools/source.properties)
+        get_filename_component(ANDROID_SDK ${CMAKE_ANDROID_NDK}/../../ REALPATH CACHE)
+    # Otherwise no idea
+    endif()
+
     if(ANDROID_SDK)
         message(STATUS "ANDROID_SDK not set, detected ${ANDROID_SDK}")
     else()
@@ -47,6 +59,9 @@ endif()
 # Build tools version to use. Picks the newest version.
 if(NOT ANDROID_BUILD_TOOLS_VERSION)
     file(GLOB _ANDROID_BUILD_TOOLS_FOR_VERSION RELATIVE ${ANDROID_SDK}/build-tools/ ${ANDROID_SDK}/build-tools/*.*.*)
+    if(NOT _ANDROID_BUILD_TOOLS_FOR_VERSION)
+        message(FATAL_ERROR "No Android build tools found in ${ANDROID_SDK}/build-tools")
+    endif()
     list(GET _ANDROID_BUILD_TOOLS_FOR_VERSION -1 ANDROID_BUILD_TOOLS_VERSION)
     set(ANDROID_BUILD_TOOLS_VERSION ${ANDROID_BUILD_TOOLS_VERSION} CACHE STRING "")
     if(ANDROID_BUILD_TOOLS_VERSION)
@@ -69,6 +84,11 @@ if(NOT ANDROID_PLATFORM_VERSION)
 endif()
 
 function(android_create_apk target manifest)
+    set(jar ${ANDROID_SDK}/platforms/android-${ANDROID_PLATFORM_VERSION}/android.jar)
+    if(NOT EXISTS ${jar})
+        message(SEND_ERROR "Android platform JAR not found at ${jar}")
+    endif()
+
     set(tools_root ${ANDROID_SDK}/build-tools/${ANDROID_BUILD_TOOLS_VERSION})
     set(apk_root ${CMAKE_CURRENT_BINARY_DIR}/${target}-apk)
     # TODO: can't use $<TARGET_FILE_NAME:target> here because of
